@@ -24,7 +24,7 @@
 
 % OUTPUT
 %   fileresults One line for each FHR file with the following indices
-%    BLDI                   Baseline discordance index 
+%    MADI                   Morphological Analysis Discordance index 
 %    RMSD_bpm               Root Mean square difference of baseline
 %    Diff_Over_15_bpm_prct  percent of time on which there is 15bpm baseline diffferences
 %    Index_Agreement        Removed index

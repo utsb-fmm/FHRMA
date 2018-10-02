@@ -9,7 +9,7 @@
 % OUTPUT
 %    stats a struct
 %       with all indexes :
-%    BLDI                   Baseline discordance index 
+%    MADI                   Morphological Analysis discordance index 
 %    RMSD_bpm               Root Mean square difference of baseline
 %    Diff_Over_15_bpm_prct  percent of time on which there is 15bpm baseline diffferences
 %    Index_Agreement        Removed index
@@ -79,7 +79,7 @@ function stats=statscompare(FHR,LDB1,LDB2,acc1,acc2,overshoots)
     D1=conv((L1-FHRu).^2,ones(1,240)/240);D1=sqrt(D1(241:end-239))+5;
     D2=conv((L2-FHRu).^2,ones(1,240)/240);D2=sqrt(D2(241:end-239))+5;
     D=(L1(121:end-120)-L2(121:end-120)).^2;
-    stats.BLDI=mean(D./(D1.*D2+D));
+    stats.MADI=mean(D./(D1.*D2+D));
     
     stats.RMSD_bpm=sqrt(mean((L1-L2).^2)); %Root Mean Square Difference
     
