@@ -2,3 +2,5 @@
 
 All information at http://ustb.univ-catholille.fr/fhr-review
 
+To start launch the function fhrmorpho on Matlab
+
