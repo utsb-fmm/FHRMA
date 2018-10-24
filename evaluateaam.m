@@ -90,14 +90,9 @@ function  fileresults=evaluateaam(command,expertbase,folder)
             filename=expertbase(i).filename;
         end
         [FHR1,FHR2,TOCO]=fhropen(filename);
-        [~,FHRraw,TOCO]=preprocess(FHR1,FHR2,TOCO);
-        rjct=expertbase(i).unreliableSignal;
-        for j=1:size(rjct,1)
-            FHRraw(round(rjct(j,1)*240+1):round(rjct(j,2)*240))=NaN;
-        end
+        [~,FHRraw,TOCO]=preprocess(FHR1,FHR2,TOCO,expertbase(i).unreliableSignal);
         FHR0=FHRraw;FHR0(isnan(FHR0))=0;
-        [FHR,FHRraw]=preprocess(FHR0,zeros(1,length(FHR0)),TOCO);
-        FHR0=FHRraw;FHR0(isnan(FHR0))=0;
+
 
         
         

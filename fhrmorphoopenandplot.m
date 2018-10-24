@@ -38,17 +38,28 @@
 
 
 function plotters=fhrmorphoopenandplot(filename,analyses)
-    [FHR1,FHR2,TOCO]=fhropen(filename);
-    [FHR,FHRraw,TOCO]=preprocess(FHR1,FHR2,TOCO);
-    FHR0=FHRraw;FHR0(isnan(FHR0))=0;
     g=load('expertAnalyses');
     ff=find(['\' filename]=='\'| ['\' filename]=='/',1,'last');
     s=find(strcmpi(filename(ff:end), {g.data(:).filename} ));
+    
+    [FHR1,FHR2,TOCOorig]=fhropen(filename);
+    [~,FHRraw,TOCO,d,f]=preprocess(FHR1,FHR2,TOCOorig);
+    
     if ~isempty(s)
+        [FHR,FHRraw2,TOCO]=preprocess(FHR1,FHR2,TOCOorig,g.data(s).unreliableSignal);
+        
+        FHR0=FHRraw2;FHR0(isnan(FHR0))=0;
+        rjct=[g.data(s).notToAnalyse;[length(FHR)/240-1 length(FHR)/240]] ;
+        for j=1:size(rjct,1)
+            FHR0(round(rjct(j,1)*240+1):round(rjct(j,2)*240))=0;
+        end
         SelectionAcc={g.data(s).accelerations, g.data(s).decelerations, g.data(s).overshoots, g.data(s).unreliableSignal, g.data(s).notToAnalyse};
     else
+        FHR0=FHRraw;FHR0(isnan(FHR0))=0;
         SelectionAcc(1:5)={zeros(0,2)};
     end
+    
+    
     for i=1:size(analyses,1)
         if strcmp(analyses{i,2},'expert') 
             if ~isempty(s), BLPoints=g.data(s).expertPts;else BLPoints=zeros(2,0);end
@@ -63,6 +74,13 @@ function plotters=fhrmorphoopenandplot(filename,analyses)
             S{2}=dec(1:2,:)'/60;
 
             plotters(i)=fhrplot({FHR,FHRraw,baseline},TOCO,[analyses{i,1} ' - ' filename],S);
+            if ~isempty(s) && ~isempty(g.data(s).baseline)
+                
+                stats=statscompare(FHR0,g.data(s).baseline(d:f),baseline,SelectionAcc(1:2),S,g.data(s).overshoots);
+                plotters(i).StatText=sprintf(' MADI:%0.2f%% \n SI:%0.2f%%\n\n RMSD baseline: %.2f bpm \n 15bpm difference rate:  %0.2f%% \n\n Deceleration :\n Sensitivity: %.3f\n PPV: %.3f\n F-measure: %.3f\n RMSD durations: %.2f s\n Mean diff duration: %.3f s \n\n Acceleration :\n Sensitivity: %.3f\n PPV: %.3f\n F-measure: %.3f\n RMSD durations: %.2f s\n Mean diff duration: %.3f s',...
+                    stats.MADI*100,stats.SI_prct,stats.RMSD_bpm,stats.Diff_Over_15_bpm_prct,1-stats.Dec_Only_1_Rate,1-stats.Dec_Only_2_Rate,2/(1/(1-stats.Dec_Only_2_Rate)+1/(1-stats.Dec_Only_1_Rate)) ,stats.Dec_Length_RMSD_s,stats.Dec_Length_Avg_2_M_1_s,1-stats.Acc_Only_1_Rate,1-stats.Acc_Only_2_Rate,2/(1/(1-stats.Acc_Only_2_Rate)+1/(1-stats.Acc_Only_1_Rate)),stats.Acc_Length_RMSD_s,stats.Acc_Length_Avg_2_M_1_s);
+                    
+            end
 
         end
         addlistener(plotters(i),'ChangeTime',@(src,evtdat) changeTime(i,plotters));

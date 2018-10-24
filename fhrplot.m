@@ -2,11 +2,17 @@
 % to draw accidents
 %
 % USAGE 
-%     
+%     obj=fhrplot(Sigs,TOCO)
+%     obj=fhrplot(Sigs,TOCO,title)
+%     obj=fhrplot(Sigs,TOCO,title,Acc)
+%     obj=fhrplot(Sigs,TOCO,title,Acc,BLPoints)
 %
 % INPUT
-
-% 
+%     Sigs , a Cell of row signal, for the top part generally {FHR,FHRraw,baseline}
+%     TOCO the TOCOgraph sig
+%     title  The figure title
+%     Acc    cell list of periods {Acceleration, Deceleration, overShoots,Unreliable, Not to Analyse}
+%     BLPoints List of expert baseline points
 %
 
 %123456789012345678901234567890123456789012345678901234567890123456789012
@@ -75,6 +81,7 @@ classdef fhrplot < hgsetget
         SelectionAcc
         BaseLine
         BLPoints
+        StatText
     end
     methods
         
@@ -105,7 +112,7 @@ classdef fhrplot < hgsetget
             obj.SelectionAcc(1:size(obj.AccidentInfo,1))={zeros(0,2)};
             obj.BLPoints=zeros(2,0);
             if nargin<3, title=''; end
-            obj.Fig=figure('Units','pixels','position',g.pos,'CloseRequestFcn',@(src,evts) close(obj),'WindowButtonMotionFcn',@(src,evt) MouseMovement(obj),'WindowButtonDownFcn',@(src,evt) MouseDown(obj),'ResizeFcn',@(src,evt) resize(obj),'KeyPressFcn', @(src,evt) KeyPressed(obj,evt),'Renderer','zbuffer','Name',title,'numbertitle', 'off');
+            obj.Fig=figure('Units','pixels','position',g.pos,'CloseRequestFcn',@(src,evts) close(obj),'WindowButtonMotionFcn',@(src,evt) MouseMovement(obj),'WindowButtonDownFcn',@(src,evt) MouseDown(obj),'ResizeFcn',@(src,evt) resize(obj),'KeyPressFcn', @(src,evt) KeyPressed(obj,evt),'Renderer','zbuffer','Name',title,'numbertitle', 'off','toolbar','none');
            
             if nargin>=4, obj.SelectionAcc=Acc; end
             if nargin>=5, obj.BLPoints=BLPoints; end
@@ -120,13 +127,16 @@ classdef fhrplot < hgsetget
             obj.EdtInfo=uicontrol(obj.Fig,'Style','edit','String','','units','Pixels','position',[380 10 180 30],'BackgroundColor',[1 1 1]);
             obj.BtnSelect=uicontrol(obj.Fig,'Style','pushbutton','String','save Select','units','Pixels','position',[570 10 80 30],'Callback',@(src,evt) clickSelect(obj));
             uicontrol(obj.Fig,'Style','pushbutton','String','Help','units','Pixels','position',[660 10 40 30],'Callback',@(src,evt) clickHelp(obj));
+            uicontrol(obj.Fig,'Style','pushbutton','String','Eval','units','Pixels','position',[700 10 40 30],'Callback',@(src,evt) clickEval(obj));
             
-           try obj.BLnames=blnames;   catch, for i=2:length(Sigs), obj.BLnames{i-1}=['BL ' num2str(i-1)]; end,end
+            try obj.BLnames=blnames;   catch, for i=2:length(Sigs), obj.BLnames{i-1}=['Sig ' num2str(i-1)]; end,end
             try obj.BLcolors=blcolors; catch, obj.BLcolors=[0 0 0;.7 .7 .7;0 0 0;0 0 1;.7 .7 0;0 1 1;1 0 1;0 0 1;0 1 0;1 1 0;0 1 1;1 0 1];  end
+            
+            
             
             obj.Time=0;
 
-            
+            obj.StatText='';
             obj.Mode='Points';
             obj.Sigs=Sigs;
             obj.TOCO=TOCO;
@@ -141,10 +151,10 @@ classdef fhrplot < hgsetget
             obj.BLexpert=zeros(1,length(obj.Sigs{1}));
 
 
-            obj.chkbl(1)=uicontrol(obj.Fig,'Style','toggle','String','Expert','units','Pixels','position',[710 10 60 30],'Value',1,'Callback',@(src,evt) redraw(obj),'ForegroundColor',[1 0 0]);
+            obj.chkbl(1)=uicontrol(obj.Fig,'Style','toggle','String','Expert','units','Pixels','position',[750 10 60 30],'Value',1,'Callback',@(src,evt) redraw(obj),'ForegroundColor',[1 0 0]);
             
             for i=2:length(Sigs)
-                obj.chkbl(i)=uicontrol(obj.Fig,'Style','toggle','String',obj.BLnames{i-1},'ForegroundColor',obj.BLcolors(i+1,:),'units','Pixels','position',[670+i*50 10 50 30],'Value',1);
+                obj.chkbl(i)=uicontrol(obj.Fig,'Style','toggle','String',obj.BLnames{i-1},'ForegroundColor',obj.BLcolors(i+1,:),'units','Pixels','position',[710+i*50 10 50 30],'Value',1);
                 set(obj.chkbl(i),'Callback',@(src,evt) redraw(obj))
             end              
             resize(obj);
@@ -162,6 +172,13 @@ classdef fhrplot < hgsetget
             axes('position',[0 0 1 1])
             C=imread('help_legend.png');
             image(C)
+        end
+        
+        function clickEval(obj)
+            position=get(obj.Fig,'position');
+            figure('position',[position(1:2) 275 400],'Toolbar','none','MenuBar','none','Name','Evaluation against expert','numbertitle', 'off')
+            uicontrol('units','normalized','style','text','position',[0 0 1 1],'String',obj.StatText,'HorizontalAlignment','Left')
+            
         end
         
         function clickBaseline(obj)
@@ -212,12 +229,12 @@ classdef fhrplot < hgsetget
             %[60-210]
             PixelsByCm=pos(4)/7.5;
             obj.WinLength=pos(3)/PixelsByCm;
-            redrawSelect(obj);
+            
             t=10*(ceil(obj.Time/10):floor((obj.Time+obj.WinLength)/10));
             
             set(obj.Axes,'Ylim',[60 210],'Xlim',[0 obj.WinLength],'Xtick',t-obj.Time,'XtickLabel',t);
             set(obj.AxesToco,'Ylim',[0 100],'Xlim',[0 obj.WinLength]);
-            
+            redrawSelect(obj);
             
             
             for i=1:7
