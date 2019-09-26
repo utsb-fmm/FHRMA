@@ -4,10 +4,10 @@
 % USAGE
 %    fileresults=evaluateaam(command,expertbase,folder)
 % EXAMPLE
-%    load expertAnalyses.mat   
+%    load analyses/expertAnalyses.mat   
 %    fileresults=evaluateaam('aamlu(FHR)',data([data(:).trainingData]==1),'traindata/')
 %       ->Evaluate the Method Lu on the training dataset
-%    fileresults=evaluateaam('L_std.mat',data([data(:).trainingData]==1),'traindata/')
+%    fileresults=evaluateaam('analyses/L_std.mat',data([data(:).trainingData]==1),'traindata/')
 %       ->Same since Lu results are saves in L_std.mat         
 % INPUT
 %    command    EITHER the command to get the analysis

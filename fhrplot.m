@@ -150,13 +150,13 @@ classdef fhrplot < hgsetget
             obj.NeedSave=false;
             obj.BLexpert=zeros(1,length(obj.Sigs{1}));
 
-
-            obj.chkbl(1)=uicontrol(obj.Fig,'Style','toggle','String','Expert','units','Pixels','position',[750 10 60 30],'Value',1,'Callback',@(src,evt) redraw(obj),'ForegroundColor',[1 0 0]);
             
-            for i=2:length(Sigs)
-                obj.chkbl(i)=uicontrol(obj.Fig,'Style','toggle','String',obj.BLnames{i-1},'ForegroundColor',obj.BLcolors(i+1,:),'units','Pixels','position',[710+i*50 10 50 30],'Value',1);
-                set(obj.chkbl(i),'Callback',@(src,evt) redraw(obj))
-            end              
+            obj.chkbl=uicontrol(obj.Fig,'Style','toggle','String','Analysis','units','Pixels','position',[750 10 60 30],'Value',1,'Callback',@(src,evt) redraw(obj),'ForegroundColor',[1 0 0]);
+            
+%             for i=2:length(Sigs)
+%                 obj.chkbl(i)=uicontrol(obj.Fig,'Style','toggle','String',obj.BLnames{i-1},'ForegroundColor',obj.BLcolors(i+1,:),'units','Pixels','position',[710+i*50 10 50 30],'Value',1);
+%                 set(obj.chkbl(i),'Callback',@(src,evt) redraw(obj))
+%             end              
             resize(obj);
             
           
@@ -262,11 +262,11 @@ classdef fhrplot < hgsetget
             
             for i=1:length(obj.Sigs)
                 if(size(obj.Sigs{i},1)==1)
-                    if(i==1 || get(obj.chkbl(i),'Value'))
+                    if(i<=2 || get(obj.chkbl,'Value'))
                         line(1/240:1/240:(f-d+1)/240,obj.Sigs{i}(d:f),3*ones(1,f-d+1),'parent',obj.Axes,'Color',obj.BLcolors(i+1,:));
                     end
                 else
-                    if(i==1 || get(obj.chkbl(i),'Value'))
+                    if(i==1 || get(obj.chkbl,'Value'))
                         
                         patch([1/240:1/240:(f-d+1)/240 (f-d+1)/240:-1/240:1/240],[obj.Sigs{i}(1,d:f) obj.Sigs{i}(2,f:-1:d)],1*ones(1,2*(f-d+1)),obj.BLcolors(i+2,:), 'FaceAlpha', 0.80,'parent',obj.Axes,'EdgeColor','none');
                         patch([1/240:1/240:(f-d+1)/240 (f-d+1)/240:-1/240:1/240],[obj.Sigs{i}(1,d:f) obj.Sigs{i}(3,f:-1:d)],1*ones(1,2*(f-d+1)),obj.BLcolors(i+3,:), 'FaceAlpha', 0.80,'parent',obj.Axes,'EdgeColor','none');
@@ -278,19 +278,17 @@ classdef fhrplot < hgsetget
                 end
             end
             line(1/240:1/240:(f-d+1)/240,obj.TOCO(d:f),'parent',obj.AxesToco,'Color',[0 0 0]);
-            if(~isempty(obj.BaseLine) && get(obj.chkbl(1),'Value'))
+            if(~isempty(obj.BaseLine) && get(obj.chkbl,'Value') )
                 line(1/240:1/240:(f-d+1)/240,obj.BaseLine(d:f),'parent',obj.Axes,'Color',obj.BLcolors(1,:));
             end
             
-            if(~isempty(obj.BLPoints) && get(obj.chkbl(1),'Value') )
+            if(~isempty(obj.BLPoints) && get(obj.chkbl,'Value') )
                 line(obj.BLPoints(1,:)-obj.Time,obj.BLPoints(2,:),5*ones(size(obj.BLPoints(1,:))),'parent',obj.Axes,'Color',[1 0.6 0.4],'Marker','s','LineStyle','none');
                 xx=obj.Time:1/240:min(obj.Time+obj.WinLength,length(obj.Sigs{1})/240);
                 x=[0,obj.BLPoints(1,:),length(obj.Sigs{1})/240];
                 y=obj.BLPoints(2,[1 1:end end]);
-                try,
+                try
                     yy=linearinterpolation(x,y,xx);
-                    
-                
                     line(xx-obj.Time,yy,5*ones(size(yy)),'parent',obj.Axes,'Color',[0.8 0.3 0.1])
                 catch
                 end
@@ -515,7 +513,7 @@ classdef fhrplot < hgsetget
             else
                 cl=[1 .8 .8];
             end
-            if(get(obj.chkbl(1),'Value'))
+            if(get(obj.chkbl,'Value'))
                 if(~isempty(obj.KeySelection))
                     cl=obj.AccidentInfo{obj.KeySelection,3};
                 end

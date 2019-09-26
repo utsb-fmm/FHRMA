@@ -97,6 +97,7 @@ handles.listmethod={
     'Taylor','aamtaylor(FHR)';
     'Taylor*','aamtaylor(FHR,1)';
     'Wrobel*','aamwrobel(FHR)';
+    'WMFB','aamwmfb(FHR)';
     'Expert consensus','expert';
     };
 
@@ -104,7 +105,7 @@ for i=1:length(handles.listmethod)
     li=floor((i-1)/4);
     col=rem((i-1),4);
     handles.uiMethodToggle(i)=uicontrol(handles.uipanel1,'style','togglebutton',...
-        'String',handles.listmethod{i,1},'Position',[10+col*110 100-li*30 100 30]);
+        'String',handles.listmethod{i,1},'Position',[10+col*110 140-li*30 100 30]);
 end
     
 handles.output = hObject;

@@ -38,7 +38,7 @@
 
 
 function plotters=fhrmorphoopenandplot(filename,analyses)
-    g=load('expertAnalyses');
+    g=load('analyses/expertAnalyses');
     ff=find(['\' filename]=='\'| ['\' filename]=='/',1,'last');
     s=find(strcmpi(filename(ff:end), {g.data(:).filename} ));
     
@@ -83,8 +83,11 @@ function plotters=fhrmorphoopenandplot(filename,analyses)
             end
 
         end
-        addlistener(plotters(i),'ChangeTime',@(src,evtdat) changeTime(i,plotters));
+        
             
+    end
+    for i=1:size(analyses,1)
+        addlistener(plotters(i),'ChangeTime',@(src,evtdat) changeTime(i,plotters));
     end
 end
 function changeTime(n,Ps)
@@ -95,7 +98,7 @@ function changeTime(n,Ps)
 end
 
 function Select(filename,BL,Accidents)
-    g=load('expertAnalyses');
+    g=load('analyses/expertAnalyses');
     ff=find(['\' filename]=='\'| ['\' filename]=='/',1,'last');
     s=find(strcmpi(filename(ff:end), {g.data(:).filename} ));
     if(isempty(s))
