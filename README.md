@@ -7,7 +7,7 @@ To start, type **fhrmorpho** on Matlab
 ![Presentation image](http://utsb.univ-catholille.fr/fhr-review/images/6/62/Presentation.png)
 FIG. 1. Illustration of the main *fhrmorpho* interface. (A) main window, (B) discordance evaluation between WMFB method and expert consensus (C) WMFB method analysis (D) Expert consensus analysis.
 
-**Please cite those papers if you use any of the data or source code of this repository.** [1] is the main reference which you must cite if you want to make any reference to this work. [3] must be cited if you use the dataset. [4] must be cite if you use the toolbox. [5] must be cite if you use the WMFB method. Citing most of the five references will be much appreciated but not mandatory.
+**Please cite those papers if you use any of the data or source code of this repository.** [1] is the main reference which you must cite if you want to make any reference to this work. [3] must be cited if you use the dataset. [4] must be cited if you use the toolbox. [5] must be cited if you use the WMFB method. Citing most of the five references will be much appreciated but not mandatory.
 
 **[1]** Houzé de l’Aulnoit, A., Boudet, S., Demailly, R., Delgranche, A., Peyrodie, L., Beuscart, R., Houzé de l’Aulnoit,D. - Automated fetal heart rate analysis for baseline determination and acceleration/deceleration detection: A comparison of 11 methods versus expert consensus *Biomedical Signal Processing and Control 49:113--123,2019*
 
