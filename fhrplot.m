@@ -167,7 +167,7 @@ classdef fhrplot < hgsetget
             notify(obj,'Select');
         end
         
-        function clickHelp(obj)
+        function clickHelp(obj) %#ok<MANU>
             figure('position',[0 100 275 280])
             axes('position',[0 0 1 1])
             C=imread('help_legend.png');
@@ -368,6 +368,7 @@ classdef fhrplot < hgsetget
                             set(obj.SelRectTmp,'FaceColor',obj.AccidentInfo{nkey,3})
                         else
                             newSelect=[min(pos(1,1)+obj.Time,obj.SelectionStart) max(pos(1,1)+obj.Time,obj.SelectionStart)];
+                            if isempty(obj.SelectionAcc{nkey}), obj.SelectionAcc{nkey}=zeros(0,2); end
                             E=obj.SelectionAcc{nkey}(:,1)<=newSelect(2) & obj.SelectionAcc{nkey}(:,2)>=newSelect(1);
                             newSelect(1)=min([obj.SelectionAcc{nkey}(E,1);newSelect(1)]);
                             newSelect(2)=max([obj.SelectionAcc{nkey}(E,2);newSelect(2)]);

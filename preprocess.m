@@ -45,7 +45,7 @@ d=find(FHR>0,1);
 
 if nargin>=4
     for j=1:size(unreliableSignal,1)
-        FHR(d+round(rjct(j,1)*240+1):d+round(rjct(j,2)*240))=0;
+        FHR(d+round(unreliableSignal(j,1)*240+1):d+round(unreliableSignal(j,2)*240))=0;
     end
 end
 [FHRi,d,f]=interpolFHR(FHR);

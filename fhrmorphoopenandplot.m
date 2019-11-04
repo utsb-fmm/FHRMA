@@ -75,8 +75,8 @@ function plotters=fhrmorphoopenandplot(filename,analyses)
 
             plotters(i)=fhrplot({FHR,FHRraw,baseline},TOCO,[analyses{i,1} ' - ' filename],S);
             if ~isempty(s) && ~isempty(g.data(s).baseline)
-                
-                stats=statscompare(FHR0,g.data(s).baseline(d:f),baseline,SelectionAcc(1:2),S,g.data(s).overshoots);
+                %%%%%%
+                stats=statscompare(FHR0(1:f-d+1),g.data(s).baseline(1:f-d+1),baseline,SelectionAcc(1:2),S,g.data(s).overshoots);
                 plotters(i).StatText=sprintf(' MADI:%0.2f%% \n SI:%0.2f%%\n\n RMSD baseline: %.2f bpm \n 15bpm difference rate:  %0.2f%% \n\n Deceleration :\n Sensitivity: %.3f\n PPV: %.3f\n F-measure: %.3f\n RMSD durations: %.2f s\n Mean diff duration: %.3f s \n\n Acceleration :\n Sensitivity: %.3f\n PPV: %.3f\n F-measure: %.3f\n RMSD durations: %.2f s\n Mean diff duration: %.3f s',...
                     stats.MADI*100,stats.SI_prct,stats.RMSD_bpm,stats.Diff_Over_15_bpm_prct,1-stats.Dec_Only_1_Rate,1-stats.Dec_Only_2_Rate,2/(1/(1-stats.Dec_Only_2_Rate)+1/(1-stats.Dec_Only_1_Rate)) ,stats.Dec_Length_RMSD_s,stats.Dec_Length_Avg_2_M_1_s,1-stats.Acc_Only_1_Rate,1-stats.Acc_Only_2_Rate,2/(1/(1-stats.Acc_Only_2_Rate)+1/(1-stats.Acc_Only_1_Rate)),stats.Acc_Length_RMSD_s,stats.Acc_Length_Avg_2_M_1_s);
                     
