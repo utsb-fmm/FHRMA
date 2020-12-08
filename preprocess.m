@@ -37,17 +37,18 @@
 %     You should have received a copy of the GNU General Public License
 %     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-function [FHRi,FHR,TOCOi,d,f]=preprocess(FHR1,FHR2,TOCO,unreliableSignal)
+function [FHRi,FHR,TOCO,d,f]=preprocess(FHR1,FHR2,TOCO,unreliableSignal)
 
 FHR=max([FHR1;FHR2]);
+if nargin>=4
+    for j=1:size(unreliableSignal,1)
+        FHR(round(unreliableSignal(j,1)*240+1):round(unreliableSignal(j,2)*240))=0;
+    end
+end
 FHR=removesmallpart(FHR);
 d=find(FHR>0,1);
 
-if nargin>=4
-    for j=1:size(unreliableSignal,1)
-        FHR(d+round(unreliableSignal(j,1)*240+1):d+round(unreliableSignal(j,2)*240))=0;
-    end
-end
+
 [FHRi,d,f]=interpolFHR(FHR);
-FHRi=FHRi(d:f);TOCOi=TOCO(d:f);FHR=FHR(d:f);
+%FHRi=FHRi(d:f);TOCOi=TOCO(d:f);FHR=FHR(d:f);
 FHR(FHR==0)=NaN;

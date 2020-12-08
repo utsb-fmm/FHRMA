@@ -85,7 +85,7 @@ for winstart=1:length(sFHR)-6*30
             % and alternate array are computed from the modal value.
             Arrays(:)=0;
             Arrays(winstart+(1:6*30))=-1+2*(abs(sFHR(winstart+(1:6*30))-y)<=8);
-            fprintf('Switch t: %f, level:%f, new level:%f\n',winstart/30+3,level,mean(sFHR(Arrays==1)));
+            %fprintf('Switch t: %f, level:%f, new level:%f\n',winstart/30+3,level,mean(sFHR(Arrays==1)));
         end
     end
     baseline(winstart+3*30)=mean(sFHR(Arrays==1));

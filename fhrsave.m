@@ -3,7 +3,7 @@
 % .fhra means there is a morphological analysis
 % 
 % USAGE
-%    fhrsave(filename,FHR1,FHR2,TOCO,timestamp,FHRm,FHRi,baselineFHR)
+%    fhrsave(filename,FHR1,FHR2,TOCO,timestamp,MHR,FHRi,baselineFHR)
 %
 % INPUT
 %     filename       : File location
@@ -13,7 +13,7 @@
 %     FHR2           : Second FHR signal (for twin or second sensor)
 %     TOCO           : TOCO signal (4Hz)
 %     timestamp      : Unix timestamp of the begining of recording
-%     FHRm           : (optional) Maternal Heart Rate
+%     MHR           : (optional) Maternal Heart Rate
 %     FHRi           : (optional) Préprocessed FHR (interpollated)
 %     baselineFHR    : (optional) Baseline FHR
 %     baselineTOCO   : (optional) Baseline TOCO
@@ -38,13 +38,13 @@
 % 
 %     You should have received a copy of the GNU General Public License
 %     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-function fhrsave(filename,FHR1,FHR2,TOCO,timestamp,FHRm,FHRi,baselineFHR)
+function fhrsave(filename,FHR1,FHR2,TOCO,timestamp,MHR,FHRi,baselineFHR)
     f=fopen(filename,'w');
     fwrite(f,timestamp,'uint32');
     
     for i=1:length(FHR1)
         if nargin>=6
-            fwrite(f,[FHR1(i);FHR2(i);FHRm(i)]*4,'uint16');
+            fwrite(f,[FHR1(i);FHR2(i);MHR(i)]*4,'uint16');
             fwrite(f,[TOCO(i);0]*2,'uint8');
             if nargin>=8
                 fwrite(f,[FHRi(i);baselineFHR(i)]*4,'uint16');

@@ -7,6 +7,7 @@
 %    load analyses/expertAnalyses.mat   
 %    fileresults=evaluateaam('aamlu(FHR)',data([data(:).trainingData]==1),'traindata/')
 %       ->Evaluate the Method Lu on the training dataset
+%       The main criteria is then MADI=median([fileresults(:).MADI]);
 %    fileresults=evaluateaam('analyses/L_std.mat',data([data(:).trainingData]==1),'traindata/')
 %       ->Same since Lu results are saves in L_std.mat         
 % INPUT
@@ -90,10 +91,10 @@ function  fileresults=evaluateaam(command,expertbase,folder)
             filename=expertbase(i).filename;
         end
         [FHR1,FHR2,TOCO]=fhropen(filename);
-        [~,FHRraw,TOCO]=preprocess(FHR1,FHR2,TOCO,expertbase(i).unreliableSignal);
+        [FHR,FHRraw,TOCO]=preprocess(FHR1,FHR2,TOCO,expertbase(i).unreliableSignal);
         FHR0=FHRraw;FHR0(isnan(FHR0))=0;
 
-
+        
         
         
         if strcmp(command(end-3:end),'.mat')
@@ -106,13 +107,14 @@ function  fileresults=evaluateaam(command,expertbase,folder)
         end
         
         
-        
-        ADExpert={expertbase(i).accelerations, expertbase(i).decelerations};
-         
         rjct=[expertbase(i).notToAnalyse;[length(FHR)/240-1 length(FHR)/240]] ;
         for j=1:size(rjct,1)
             FHR0(round(rjct(j,1)*240+1):round(rjct(j,2)*240))=0;
-        end
+        end     
+        ADExpert={expertbase(i).accelerations, expertbase(i).decelerations};
+         
+
+        %FHR0=FHR0(1:length(FHRraw)); %if rjct ends after, FHR0 size increased
 
         
         fileresults(i)=statscompare(FHR0,expertbase(i).baseline,baseline,ADExpert,ADMethod,expertbase(i).overshoots);

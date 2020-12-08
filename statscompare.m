@@ -76,8 +76,8 @@ function stats=statscompare(FHR,LDB1,LDB2,acc1,acc2,overshoots)
     acc2{2}=filteraccident(acc2{2},FHR);    
     overshoots=filteraccident(overshoots,FHR); 
     
-    D1=conv((L1-FHRu).^2,ones(1,240)/240);D1=sqrt(D1(241:end-239))+5;
-    D2=conv((L2-FHRu).^2,ones(1,240)/240);D2=sqrt(D2(241:end-239))+5;
+    D1=conv((L1-FHRu).^2,ones(1,240)/240);D1=sqrt(D1(241:end-239))+3;
+    D2=conv((L2-FHRu).^2,ones(1,240)/240);D2=sqrt(D2(241:end-239))+3;
     D=(L1(121:end-120)-L2(121:end-120)).^2;
     stats.MADI=mean(D./(D1.*D2+D));
     
