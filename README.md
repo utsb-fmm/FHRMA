@@ -1,6 +1,6 @@
 # A dataset and a matlab toolbox for morphological analysis of Fetal Heart Rate signal
 
-All information at http://ustb.univ-catholille.fr/fhr-review
+All information on the wiki https://github.com/utsb-fmm/FHRMA/wiki
 
 To start, type **fhrmorpho** on Matlab
 
