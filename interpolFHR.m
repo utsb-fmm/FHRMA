@@ -32,18 +32,18 @@
 %     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
 function [FHR,d,f]=interpolFHR(FHR)
-    n=find(FHR>0,1);
+    n=find(FHR>0 & ~isnan(FHR),1);
     FHR(1:n)=FHR(n);
     d=n;
     while ~isempty(n) && n<length(FHR)
-        n=find(FHR(n:end)==0,1)+n-1;
-        nf=find(FHR(n:end)>0,1)+n-1;
+        n=find(FHR(n:end)==0|isnan(FHR(n:end)),1)+n-1;
+        nf=find(FHR(n:end)>0&~isnan(FHR(n:end)),1)+n-1;
         if(~isempty(nf))
             FHR(n-1:nf)=linspace(FHR(n-1),FHR(nf),nf-n+2);
         end
         n=nf;
     end
     
-    f=find(FHR>0,1,'last');
+    f=find(FHR>0&~isnan(FHR),1,'last');
     FHR(f:end)=FHR(f);
 end

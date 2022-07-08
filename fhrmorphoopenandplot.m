@@ -37,59 +37,71 @@
 
 
 
-function plotters=fhrmorphoopenandplot(filename,analyses)
-    g=load('analyses/expertAnalyses');
+function plotters=fhrmorphoopenandplot(filename,analyses,showExpertReference)
+    g=load('FHRMAdataset/analyses/expertAnalyses');
+    if nargin<=2,showExpertReference=false;end
     ff=find(['\' filename]=='\'| ['\' filename]=='/',1,'last');
     s=find(strcmpi(filename(ff:end), {g.data(:).filename} ));
     
-    [FHR1,FHR2,TOCOorig]=fhropen(filename);
-    [~,FHRraw,TOCO,d,f]=preprocess(FHR1,FHR2,TOCOorig);
-    
+    [FHR1,FHR2,MHR,TOCOorig]=fhropen(filename);
+    [FHR,FHRraw,TOCO,d,f]=preprocess(FHR1,FHR2,TOCOorig);
+    RefBLPoints=zeros(2,0);
+    ExpertsPts=zeros(2,0);
     if ~isempty(s)
         [FHR,FHRraw2,TOCO]=preprocess(FHR1,FHR2,TOCOorig,g.data(s).unreliableSignal);
-        
-        FHR0=FHRraw2;FHR0(isnan(FHR0))=0;
+        FHR0=FHRraw2;FHR0(isnan(FHR0))=0; %Used for stats
         rjct=[g.data(s).notToAnalyse;[length(FHR)/240-1 length(FHR)/240]] ;
         for j=1:size(rjct,1)
             FHR0(round(rjct(j,1)*240+1):round(rjct(j,2)*240))=0;
         end
-        SelectionAcc={g.data(s).accelerations, g.data(s).decelerations, g.data(s).overshoots, g.data(s).unreliableSignal, g.data(s).notToAnalyse};
+
+        ExpertAcc={g.data(s).accelerations, g.data(s).decelerations, g.data(s).overshoots, g.data(s).unreliableSignal, g.data(s).notToAnalyse};
+        ExpertsPts=g.data(s).expertPts;
+        if showExpertReference
+            RefSelectionAcc=ExpertAcc;
+            RefBLPoints=g.data(s).expertPts;
+        else
+            RefSelectionAcc={zeros(0,2), zeros(0,2), zeros(0,2), g.data(s).unreliableSignal, g.data(s).notToAnalyse};        
+        end
     else
         FHR0=FHRraw;FHR0(isnan(FHR0))=0;
-        SelectionAcc(1:5)={zeros(0,2)};
+        ExpertAcc(1:5)={zeros(0,2)};
+        RefSelectionAcc(1:5)={zeros(0,2)};
     end
-    
     
     for i=1:size(analyses,1)
         if strcmp(analyses{i,2},'expert') 
-            if ~isempty(s), BLPoints=g.data(s).expertPts;else BLPoints=zeros(2,0);end
-            plotters(i)=fhrplot({FHR,FHRraw},TOCO,[analyses{i,1} ' - ' filename],SelectionAcc,BLPoints); %#ok<*AGROW>
-            
-            
-            addlistener(plotters(i),'Select',@(src,evtdat) Select(filename,plotters(i).BLPoints,plotters(i).SelectionAcc));
+            if ~isempty(s), RefBLPoints=g.data(s).expertPts;else, RefBLPoints=zeros(2,0);end
+            plotters(i)=fhrplotMA({FHRraw,FHR,MHR},TOCO,[analyses{i,1} ' - ' filename],ExpertAcc,ExpertsPts); %#ok<*AGROW>
+            addlistener(plotters(i),'Save',@(src,evtdat) Save(filename,plotters(i).RefBLPoints,plotters(i).Selections));
         else
-            S=SelectionAcc;S{3}=zeros(0,2);
             [baseline,acc,dec]=eval(analyses{i,2});
             S{1}=acc(1:2,:)'/60;
-            S{2}=dec(1:2,:)'/60;
+            S{2}=dec(1:2,:)'/60;            
+            acc=round(acc*4);dec=round(dec*4);
 
-            plotters(i)=fhrplot({FHR,FHRraw,baseline},TOCO,[analyses{i,1} ' - ' filename],S);
-            if ~isempty(s) && ~isempty(g.data(s).baseline)
-                %%%%%%
-                stats=statscompare(FHR0(1:f-d+1),g.data(s).baseline(1:f-d+1),baseline,SelectionAcc(1:2),S,g.data(s).overshoots);
-                plotters(i).StatText=sprintf(' MADI:%0.2f%% \n SI:%0.2f%%\n\n RMSD baseline: %.2f bpm \n 15bpm difference rate:  %0.2f%% \n\n Deceleration :\n Sensitivity: %.3f\n PPV: %.3f\n F-measure: %.3f\n RMSD durations: %.2f s\n Mean diff duration: %.3f s \n\n Acceleration :\n Sensitivity: %.3f\n PPV: %.3f\n F-measure: %.3f\n RMSD durations: %.2f s\n Mean diff duration: %.3f s',...
-                    stats.MADI*100,stats.SI_prct,stats.RMSD_bpm,stats.Diff_Over_15_bpm_prct,1-stats.Dec_Only_1_Rate,1-stats.Dec_Only_2_Rate,2/(1/(1-stats.Dec_Only_2_Rate)+1/(1-stats.Dec_Only_1_Rate)) ,stats.Dec_Length_RMSD_s,stats.Dec_Length_Avg_2_M_1_s,1-stats.Acc_Only_1_Rate,1-stats.Acc_Only_2_Rate,2/(1/(1-stats.Acc_Only_2_Rate)+1/(1-stats.Acc_Only_1_Rate)),stats.Acc_Length_RMSD_s,stats.Acc_Length_Avg_2_M_1_s);
-                    
+            MASigs=[baseline;baseline;baseline];
+            for j=1:size(acc,2)
+                MASigs(3,acc(1,j)+1:acc(2,j))=FHR(acc(1,j)+1:acc(2,j));
+            end
+            for j=1:size(dec,2)
+                MASigs(2,dec(1,j)+1:dec(2,j))=FHR(dec(1,j)+1:dec(2,j));
             end
 
+            plotters(i)=fhrplotMA({FHRraw,FHR,MHR,MASigs},TOCO,[analyses{i,1} ' - ' filename],RefSelectionAcc,RefBLPoints);
+            if ~isempty(s) && ~isempty(g.data(s).baseline)
+                stats=statscompare(FHR0(1:f-d+1),g.data(s).baseline(1:f-d+1),baseline,RefSelectionAcc(1:2),S,g.data(s).overshoots);
+                plotters(i).StatText=sprintf(' MADI:%0.2f%% \n SI:%0.2f%%\n\n RMSD baseline: %.2f bpm \n 15bpm difference rate:  %0.2f%% \n\n Deceleration :\n Sensitivity: %.3f\n PPV: %.3f\n F-measure: %.3f\n RMSD durations: %.2f s\n Mean diff duration: %.3f s \n\n Acceleration :\n Sensitivity: %.3f\n PPV: %.3f\n F-measure: %.3f\n RMSD durations: %.2f s\n Mean diff duration: %.3f s',...
+                    stats.MADI*100,stats.SI_prct,stats.RMSD_bpm,stats.Diff_Over_15_bpm_prct,1-stats.Dec_Only_1_Rate,1-stats.Dec_Only_2_Rate,2/(1/(1-stats.Dec_Only_2_Rate)+1/(1-stats.Dec_Only_1_Rate)) ,stats.Dec_Length_RMSD_s,stats.Dec_Length_Avg_2_M_1_s,1-stats.Acc_Only_1_Rate,1-stats.Acc_Only_2_Rate,2/(1/(1-stats.Acc_Only_2_Rate)+1/(1-stats.Acc_Only_1_Rate)),stats.Acc_Length_RMSD_s,stats.Acc_Length_Avg_2_M_1_s);
+            end
         end
-        
-            
     end
-    for i=1:size(analyses,1)
+
+    for i=1:length(plotters)
         addlistener(plotters(i),'ChangeTime',@(src,evtdat) changeTime(i,plotters));
     end
 end
+
 function changeTime(n,Ps)
     for i=[1:n-1 n+1:length(Ps)]
         Ps(i).Time=Ps(n).Time;
@@ -97,8 +109,8 @@ function changeTime(n,Ps)
     end
 end
 
-function Select(filename,BL,Accidents)
-    g=load('analyses/expertAnalyses');
+function Save(filename,BL,Accidents)
+    g=load('FHRMAdataset/analyses/expertAnalyses.mat');
     ff=find(['\' filename]=='\'| ['\' filename]=='/',1,'last');
     s=find(strcmpi(filename(ff:end), {g.data(:).filename} ));
     if(isempty(s))
@@ -106,11 +118,9 @@ function Select(filename,BL,Accidents)
     else
         g.data(s).trainingData=-1;
     end
-    %s=35;
-    a=dir(filename);
-    d=(a.bytes-4)/6;
-    baseline=linearinterpolation(BL(1,:)*240,BL(2,:),1:d);
+    [FHR1]=fhropen(filename);
+    baseline=linearinterpolation(BL(1,:)*240,BL(2,:),1:length(FHR1));
    
     g.data(s)=struct('filename',filename(ff:end),'expertPts',BL,'baseline',baseline,'trainingData',g.data(s).trainingData,'accelerations',Accidents{1}, 'decelerations',Accidents{2}, 'overshoots', Accidents{3},'unreliableSignal', Accidents{4},'notToAnalyse',Accidents{5});
-    save('expertAnalyses','-struct','g');
+    save('FHRMAdataset/analyses/expertAnalyses.mat','-struct','g');
 end

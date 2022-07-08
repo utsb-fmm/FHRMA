@@ -61,10 +61,15 @@ if zeroPhase
     sp = sparse(rows,cols,tdata);
     zi = sp \ ( b1(2:nfilt).' - a1(2:nfilt).'*b1(1) );
     
-    if strcmp(class(data),'single')
-        data=single(multisigfilter(b1,a1,double(data'),zi))';
-    else
-        data=multisigfilter(b1,a1,data',zi)';
+    try
+        if strcmp(class(data),'single')
+            data=single(multisigfilter(b1,a1,double(data'),zi))';
+        else
+            data=multisigfilter(b1,a1,data',zi)';
+        end
+    catch
+        warning('The multisigfilter function is not compiled for your system. The equivalent filtfilt Matlab function is used instead but it is slower. You can try to compile multisigfilter.c with mex command if it works to reduce computation time.')
+        data=filtfilt(b1,a1,data')';
     end
 else
     

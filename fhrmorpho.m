@@ -49,7 +49,7 @@ function varargout = fhrmorpho(varargin)
 
 % Edit the above text to modify the response to help fhrmorpho
 
-% Last Modified by GUIDE v2.5 01-Oct-2018 16:23:01
+% Last Modified by GUIDE v2.5 28-Jun-2022 13:18:36
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -105,7 +105,8 @@ for i=1:length(handles.listmethod)
     li=floor((i-1)/4);
     col=rem((i-1),4);
     handles.uiMethodToggle(i)=uicontrol(handles.uipanel1,'style','togglebutton',...
-        'String',handles.listmethod{i,1},'Position',[10+col*110 140-li*30 100 30]);
+        'String',handles.listmethod{i,1},'Position',[10+col*110 140-li*30 100 30],...
+        'Value',strcmp(handles.listmethod{i,2},'expert'));
 end
     
 handles.output = hObject;
@@ -181,7 +182,7 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[f,d]=uigetfile('*.fhr');
+[f,d]=uigetfile('FHRMAdataset/*.fhr;*.fhrm;*.dat');
 curD=cd;
 if length(d)>length(curD) && strcmp(d(1:length(curD)),curD)
     d=d(length(curD)+2:end);
@@ -198,7 +199,18 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 for i=1:length( handles.listPlotter )
     try delete( handles.listPlotter(i) ); catch, end
 end
+
 handles.listPlotter=fhrmorphoopenandplot( get(handles.edit1,'String'),...
-    handles.listmethod(cell2mat(get(handles.uiMethodToggle(:),'Value'))==1,:) );
+    handles.listmethod(cell2mat(get(handles.uiMethodToggle(:),'Value'))==1,:), ...
+    get(handles.chkRefExpert,'Value'));
 guidata(hObject, handles);
     
+
+
+% --- Executes on button press in chkRefExpert.
+function chkRefExpert_Callback(hObject, eventdata, handles)
+% hObject    handle to chkRefExpert (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of chkRefExpert

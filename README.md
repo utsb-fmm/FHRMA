@@ -2,9 +2,10 @@
 
 All information on the wiki https://github.com/utsb-fmm/FHRMA/wiki
 
-To start, type **fhrmorpho** on Matlab
+To start, type **FHRMA-menu** on Matlab or launch the app
 
 ![Presentation image](http://utsb.univ-catholille.fr/fhr-demo/Presentation.png)
+=======
 FIG. 1. Illustration of the main *fhrmorpho* interface. (A) main window, (B) discordance evaluation between WMFB method and expert consensus (C) WMFB method analysis (D) Expert consensus analysis.
 
 **Please cite those papers if you use any of the data or source code of this repository.** [1] is the main reference which you must cite if you want to make any reference to this work. [3] must be cited if you use the dataset. [4] must be cited if you use the toolbox. [5] must be cited if you use the WMFB method. Citing most of the five references will be much appreciated but not mandatory.
@@ -19,3 +20,11 @@ FIG. 1. Illustration of the main *fhrmorpho* interface. (A) main window, (B) dis
 
 **[5]** Boudet, S., Houzé de l’Aulnoit, A., Demailly, R., Peyrodie, L., Beuscart, R., Houzé de l’Aulnoit,D. - Fetal heart rate baseline computation with a weighted median filter. *Computers in Biology and Medicine pp. in Press,2019*
 
+Patch note V2.0 - July 5th 2022
+- Introduced the new sub-project of False Signal (FS) detection
+- fhropen and fhrsave functions have change parameters to read other data available from CTG monitors (Sensor types and signal quality). Parameters are not in the same order than before.
+- Train test and analyses data for baseline and A/D called FHRMA dataset, are now in FHRMAdataset subfolder
+- interpolFHR now works also when Sig loss are coded NaN (or 0)
+- Correct an incompatibility with other system than Windows. multisigfilter c function was compiled only for Windows and we replace with the Matlab built-in (but slower) function filtfilt in case this cases of other systems.
+
+- Make a new start function FHRMA and an APP to give an overview of this toolbox
