@@ -8,7 +8,7 @@ To start, type **FHRMA-menu** on Matlab or launch the app
 =======
 FIG. 1. Illustration of the main *fhrmorpho* interface. (A) main window, (B) discordance evaluation between WMFB method and expert consensus (C) WMFB method analysis (D) Expert consensus analysis.
 
-**Please cite those papers if you use any of the data or source code of this repository.** [1] is the main reference which you must cite if you want to make any reference to this work. [3] must be cited if you use the dataset. [4] must be cited if you use the toolbox. [5] must be cited if you use the WMFB method. [6] must be cited if you use the false signal detection method or dataset.
+**This toolbox is related to several papers. Please cite those papers if you use any of the data or source code of this repository.**  [4] must be cited if you use the toolbox. [1]  must be cited if you use the morphological analysis (baseline, Acceleration, deceleration) [3] must be cited if you use the morphological analysis dataset. [5] must be cited if you use the WMFB method (current best) for morphological analysis. [6] must be cited if you use the false signal detection, method, interface and/or dataset.
 
 [1] Houzé de l’Aulnoit, A., Boudet, S., Demailly, R., Delgranche, A., Peyrodie, L., Beuscart, R., Houzé de l’Aulnoit,D. - Automated fetal heart rate analysis for baseline determination and acceleration/deceleration detection: A comparison of 11 methods versus expert consensus. Biomedical Signal Processing and Control 49:113 -123,2019, DOI:10.1016/j.bspc.2018.10.002 [Download on Researchgate](https://www.researchgate.net/publication/329718625_Automated_fetal_heart_rate_analysis_for_baseline_determination_and_accelerationdeceleration_detection_A_comparison_of_11_methods_versus_expert_consensus)
 
@@ -20,7 +20,7 @@ FIG. 1. Illustration of the main *fhrmorpho* interface. (A) main window, (B) dis
 
 [5] Boudet, S., Houzé de l’Aulnoit, A., Demailly, R., Peyrodie, L., Beuscart, R., Houzé de l’Aulnoit,D. - Fetal heart rate baseline computation with a weighted median filter. Computers in biology and medicine. 2019 Nov 1;114:103468. DOI:10.1016/j.compbiomed.2019.103468 [Download on researchgate](https://www.researchgate.net/publication/336035977_Fetal_heart_rate_baseline_computation_with_a_weighted_median_filter)
 
-[6] Boudet, S., Houzé de l’Aulnoit, A., Demailly, R., Peyrodie, L., Houzé de l’Aulnoit,D. - Use of deep learning to detect the maternal heart rate and false signals on fetal heart rate recordings. preprints 2022
+[6] Boudet, S., Houzé de l’Aulnoit, A., Demailly, R., Peyrodie, L., Houzé de l’Aulnoit,D. - Use of deep learning to detect the maternal heart rate and false signals on fetal heart rate recordings. preprints 2022. DOI:10.20944/preprints202207.0131.v1 [Download on researchgate](https://www.researchgate.net/publication/361835266_Use_of_Deep_Learning_to_Detect_the_Maternal_Heart_Rate_and_False_Signals_on_Fetal_Heart_Rate_Recordings)
 
 
 
