@@ -1,15 +1,15 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="865312699" file="D:\FHRMA\FHRMA\FHRMA.prj" location="D:\FHRMA\FHRMA" name="FHRMA" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1112593157" file="D:\FHRMA\FHRMA\FHRMA.prj" location="D:\FHRMA\FHRMA" name="FHRMA" target="target.mlapps" target-name="Package App">
     <param.appname>FHRMA</param.appname>
     <param.authnamewatermark>Samuel Boudet</param.authnamewatermark>
     <param.email>samuel.boudet@univ-catholille.fr</param.email>
-    <param.company>Catholic Institure of Lille, France</param.company>
+    <param.company>Catholic Institute of Lille, France</param.company>
     <param.icon />
     <param.icons />
     <param.summary>Fetal heart rate morphological analysis toolbox</param.summary>
     <param.description>Detect false signals, baseline accelerations and decelerations. Contains the assioted datasets</param.description>
     <param.screenshot>C:\Users\samuel.boudet\AppData\Local\Temp\tpc11760a5_eb48_432c_8ccb_8342a34aac03.png</param.screenshot>
-    <param.version>2.0</param.version>
+    <param.version>2.1</param.version>
     <param.products.name>
       <item>Signal Processing Toolbox</item>
     </param.products.name>
@@ -23,12 +23,11 @@
       <item>win64</item>
       <item>win32</item>
     </param.platforms>
-    <param.output>${PROJECT_ROOT}</param.output>
+    <param.output>D:\FHRMA</param.output>
     <param.guid>b77c9a02-46bb-42ef-aed8-5e89f37905b5</param.guid>
     <unset>
       <param.icon />
       <param.icons />
-      <param.output />
     </unset>
     <fileset.main>
       <file>${PROJECT_ROOT}\FHRMA_menu.mlapp</file>
@@ -99,7 +98,7 @@
     </fileset.resources>
     <fileset.package />
     <build-deliverables>
-      <file location="D:\FHRMA" name="FHRMA" optional="false">D:\FHRMA\FHRMA</file>
+      <file location="D:\" name="FHRMA" optional="false">D:\FHRMA</file>
     </build-deliverables>
     <workflow />
     <matlab>
