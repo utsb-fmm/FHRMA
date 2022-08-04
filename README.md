@@ -4,7 +4,7 @@ All information on the wiki https://github.com/utsb-fmm/FHRMA/wiki
 
 To start, type **FHRMA-menu** on Matlab or launch the app
 
-![Presentation image](http://utsb.univ-catholille.fr/fhr-demo/Presentation.png)
+![Presentation image](https://utsb.univ-catholille.fr/fhr-demo/Presentation.png)
 =======
 FIG. 1. Illustration of the main *fhrmorpho* interface. (A) main window, (B) discordance evaluation between WMFB method and expert consensus (C) WMFB method analysis (D) Expert consensus analysis.
 
