@@ -20,7 +20,7 @@ FIG. 1. Illustration of the main *fhrmorpho* interface. (A) main window, (B) dis
 
 [5] Boudet, S., Houzé de l’Aulnoit, A., Demailly, R., Peyrodie, L., Beuscart, R., Houzé de l’Aulnoit,D. - Fetal heart rate baseline computation with a weighted median filter. Computers in biology and medicine. 2019 Nov 1;114:103468. DOI:10.1016/j.compbiomed.2019.103468 [Download on researchgate](https://www.researchgate.net/publication/336035977_Fetal_heart_rate_baseline_computation_with_a_weighted_median_filter)
 
-[6] Boudet, S., Houzé de l’Aulnoit, A., Demailly, R., Peyrodie, L., Houzé de l’Aulnoit,D. - Use of deep learning to detect the maternal heart rate and false signals on fetal heart rate recordings. preprints 2022. DOI:10.20944/preprints202207.0131.v1 [Download on researchgate](https://www.researchgate.net/publication/361835266_Use_of_Deep_Learning_to_Detect_the_Maternal_Heart_Rate_and_False_Signals_on_Fetal_Heart_Rate_Recordings)
+[6] Boudet, S., Houzé de l’Aulnoit, A., Demailly, R., Peyrodie, L., Houzé de l’Aulnoit,D. - Use of deep learning to detect the maternal heart rate and false signals on fetal heart rate recordings. Biosensors 2022; 12(9):691. DOI:10.3390/bios12090691 [Download on researchgate](https://www.researchgate.net/publication/363027076_Use_of_Deep_Learning_to_Detect_the_Maternal_Heart_Rate_and_False_Signals_on_Fetal_Heart_Rate_Recordings)
 
 Patch note V2.1 - July 21th 2022
 - Adding python source code for training FS methods
